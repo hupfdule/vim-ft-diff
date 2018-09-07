@@ -37,6 +37,8 @@ function! DiffFoldLevel()
         return '>2'
     elseif l:line =~# '^--- \d\+,\d\+ ----$'     " context: file2
         return '>2'
+    elseif l:line =~# '^Only in' " file only in one folder when using diff -r
+        return '>1'
     else
         return '='
     endif
