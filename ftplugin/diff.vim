@@ -49,3 +49,25 @@ function! DiffFoldLevel()
         return '='
     endif
 endfunction
+
+function! Jump_to_next_file(backwards) abort
+  if (a:backwards)
+    call search(s:pattern_file, 'Wb')
+  else
+    call search(s:pattern_file, 'W')
+  endif
+endfunction
+
+function! Jump_to_next_hunk(backwards) abort
+  if (a:backwards)
+    call search(s:pattern_hunk, 'Wb')
+  else
+    call search(s:pattern_hunk, 'W')
+  endif
+endfunction
+
+" Provide movement mappings
+nnoremap <buffer> ]] :call Jump_to_next_file(0)<cr>
+nnoremap <buffer> [[ :call Jump_to_next_file(1)<cr>
+nnoremap <buffer> ]h :call Jump_to_next_hunk(0)<cr>
+nnoremap <buffer> [h :call Jump_to_next_hunk(1)<cr>
