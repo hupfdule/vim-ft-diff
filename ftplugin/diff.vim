@@ -11,6 +11,12 @@ if (exists("b:did_ftplugin"))
 endif
 let b:did_ftplugin = 1
 
+let s:pattern_file          = '^\(diff\|Index\)'
+let s:pattern_hunk          = '^\(@@\|\d\)'
+let s:pattern_context_file1 = '^\*\*\* \d\+,\d\+ \*\*\*\*$'
+let s:pattern_context_file2 = '^--- \d\+,\d\+ ----$'
+let s:pattern_only_in       = '^Only in'
+
 setlocal nomodeline formatoptions-=croq formatoptions+=tl
 setlocal foldmethod=expr
 setlocal foldexpr=DiffFoldLevel()
@@ -29,15 +35,15 @@ setlocal foldcolumn=3
 function! DiffFoldLevel()
     let l:line=getline(v:lnum)
 
-    if l:line =~# '^\(diff\|Index\)'     " file
+    if l:line =~# s:pattern_file               " file
         return '>1'
-    elseif l:line =~# '^\(@@\|\d\)'  " hunk
+    elseif l:line =~# s:pattern_hunk           " hunk
         return '>2'
-    elseif l:line =~# '^\*\*\* \d\+,\d\+ \*\*\*\*$' " context: file1
+    elseif l:line =~# s:pattern_context_file1  " context: file1
         return '>2'
-    elseif l:line =~# '^--- \d\+,\d\+ ----$'     " context: file2
+    elseif l:line =~# s:pattern_context_file2  " context: file2
         return '>2'
-    elseif l:line =~# '^Only in' " file only in one folder when using diff -r
+    elseif l:line =~# s:pattern_only_in        " file only in one folder when using diff -r
         return '>1'
     else
         return '='
